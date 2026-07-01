@@ -25,12 +25,12 @@ RemediationName/
 ## Deploying
 
 Each remediation's README contains the exact Intune configuration
-(**Devices > Remediations > Create**), including the required 32-bit / SYSTEM /
+(**Devices > Remediations > Create**), including the required 64-bit / SYSTEM /
 signature settings.
 
 ## Author
 
-Maintained by **Alper Atar** — Lead Intune / Modern Workplace Consultant.
+Maintained by **Alper Atar** — Modern Workplace Consultant.
 
 ## License
 

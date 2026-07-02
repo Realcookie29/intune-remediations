@@ -12,6 +12,7 @@ safe, idempotent, and easy to audit.
 | Remediation | Description | Type |
 |-------------|-------------|------|
 | [Edge Extension Inventory](./Edge-Extension-Inventory) | Inventories all Microsoft Edge extensions per user profile across a device. | Read-only / inventory |
+| [Disable Adobe Generative AI](./Disable-Adobe-Generative-AI) | Disables the Adobe Acrobat/Reader AI Assistant (`bEnableGentech = 0`) and keeps it disabled. | Enforce / self-healing |
 
 ## How these are structured
 

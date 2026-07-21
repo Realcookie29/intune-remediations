@@ -27,23 +27,25 @@ $extensions = [System.Collections.Generic.List[object]]::new()
 
 try {
     # Find all user profiles on this machine (skip system accounts)
-    $userProfiles = Get-ChildItem 'C:\Users' -Directory |
-        Where-Object { $_.Name -notin @('Public','Default','Default User','All Users','WDAGUtilityAccount') }
+    $ProfileExclusions = @("defaultuser0", "wdagutilityaccount", "WsiAccount")
+    $UserProfiles = Get-CimInstance Win32_UserProfile -Filter "Special = False" | 
+        Select-Object Sid, LocalPath, @{Name="ProfileFolder";Expression={ Split-Path $_.LocalPath -Leaf }} |
+        Where-Object { $ProfileExclusions -notcontains $_.ProfileFolder }
 
     foreach ($user in $userProfiles) {
-        $edgeUserData = Join-Path $user.FullName 'AppData\Local\Microsoft\Edge\User Data'
+        $edgeUserData = Join-Path $user.LocalPath 'AppData\Local\Microsoft\Edge\User Data'
         if (-not (Test-Path $edgeUserData)) { continue }
 
         # A user can have multiple Edge profiles (Default, Profile 1, etc.)
         $edgeProfiles = Get-ChildItem $edgeUserData -Directory |
             Where-Object { $_.Name -eq 'Default' -or $_.Name -like 'Profile *' }
 
-        foreach ($profile in $edgeProfiles) {
-            $extensionsPath = Join-Path $profile.FullName 'Extensions'
+        foreach ($edgeProfile in $edgeProfiles) {
+            $extensionsPath = Join-Path $edgeProfile.FullName 'Extensions'
             if (-not (Test-Path $extensionsPath)) { continue }
 
             # Read Preferences for enabled status + display name fallback
-            $preferencesFile = Join-Path $profile.FullName 'Preferences'
+            $preferencesFile = Join-Path $edgeProfile.FullName 'Preferences'
             $preferences = $null
             if (Test-Path $preferencesFile) {
                 try {
@@ -96,8 +98,8 @@ try {
                     id       = $extId
                     name     = $name
                     version  = $versionDir.Name
-                    user     = $user.Name
-                    profile  = $profile.Name
+                    user     = $user.ProfileFolder
+                    profile  = $edgeprofile.Name
                     enabled  = $enabled
                 })
             }

@@ -16,7 +16,12 @@
     Run as: SYSTEM
     Run script in 64-bit PowerShell: No (required NO - extensions live in the user profile)
     Author: Alper Atar
-    Version: 1.0
+    Version: 1.1
+
+    Version history:
+    1.0 - Initial release
+    1.1 - Renamed $profile variable and moved profile folder name to a separate property to avoid confusion with the PowerShell automatic variable $profile. Added a fallback for the extension display name if the default locale is not specified in the manifest.
+
 #>
 
 [CmdletBinding()]
